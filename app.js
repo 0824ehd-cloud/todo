@@ -1,3 +1,36 @@
+// Password gate
+(function () {
+    const PW = '0510';
+    const lockScreen = document.getElementById('lock-screen');
+    const pwInput = document.getElementById('pw-input');
+    const pwBtn = document.getElementById('pw-btn');
+    const pwError = document.getElementById('pw-error');
+
+    if (sessionStorage.getItem('auth') === '1') {
+        lockScreen.classList.add('hidden');
+        return;
+    }
+
+    function tryUnlock() {
+        if (pwInput.value === PW) {
+            sessionStorage.setItem('auth', '1');
+            lockScreen.classList.add('hidden');
+        } else {
+            pwInput.value = '';
+            pwInput.classList.remove('shake');
+            void pwInput.offsetWidth;
+            pwInput.classList.add('shake');
+            pwError.classList.add('visible');
+            setTimeout(() => pwError.classList.remove('visible'), 2000);
+            pwInput.focus();
+        }
+    }
+
+    pwBtn.addEventListener('click', tryUnlock);
+    pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+    pwInput.focus();
+})();
+
 const input = document.getElementById('todo-input');
 const addBtn = document.getElementById('add-btn');
 const todoList = document.getElementById('todo-list');

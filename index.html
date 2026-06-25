@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="lock-screen">
+        <div class="lock-box">
+            <div class="lock-icon">🔒</div>
+            <h2>상미 TODO</h2>
+            <p>비밀번호를 입력하세요</p>
+            <input type="password" id="pw-input" placeholder="••••" maxlength="20" autocomplete="off">
+            <div class="pw-error" id="pw-error">비밀번호가 틀렸어요</div>
+            <button id="pw-btn">확인</button>
+        </div>
+    </div>
+
     <div class="container">
         <header>
             <div class="date-display" id="date-display"></div>
