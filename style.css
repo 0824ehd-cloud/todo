@@ -1,0 +1,340 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #f0f2f5;
+    --container-bg: #ffffff;
+    --text: #1a1a2e;
+    --subtext: #9a9aaa;
+    --border: #e8e8f0;
+    --primary: #6c63ff;
+    --primary-hover: #5a52d5;
+    --completed-color: #b0b0c0;
+    --shadow: 0 8px 32px rgba(108, 99, 255, 0.1);
+    --item-hover: #f8f8ff;
+    --delete: #ff6b6b;
+}
+
+[data-theme="dark"] {
+    --bg: #0f0f1a;
+    --container-bg: #1a1a2e;
+    --text: #e8e8f8;
+    --subtext: #5a5a7a;
+    --border: #2a2a42;
+    --primary: #7c74ff;
+    --primary-hover: #9088ff;
+    --completed-color: #3a3a5a;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --item-hover: #1e1e32;
+    --delete: #ff6b6b;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px 16px 100px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.container {
+    width: 100%;
+    max-width: 560px;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 36px;
+}
+
+h1 {
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: 0.4em;
+    background: linear-gradient(135deg, var(--primary), #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+#theme-toggle {
+    background: var(--container-bg);
+    border: 1px solid var(--border);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 50px;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+.input-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#todo-input {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    font-size: 1rem;
+    background: var(--container-bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+#todo-input::placeholder {
+    color: var(--subtext);
+}
+
+#todo-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.12);
+}
+
+#add-btn {
+    padding: 15px 24px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(108, 99, 255, 0.3);
+    white-space: nowrap;
+}
+
+#add-btn:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+}
+
+#add-btn:active {
+    transform: scale(0.96);
+}
+
+.todo-list-container {
+    background: var(--container-bg);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+#todo-list {
+    list-style: none;
+    min-height: 80px;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+    animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.todo-item:hover {
+    background: var(--item-hover);
+}
+
+.todo-item:last-child {
+    border-bottom: none;
+}
+
+.todo-checkbox {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    user-select: none;
+}
+
+.todo-checkbox:hover {
+    border-color: var(--primary);
+    transform: scale(1.1);
+}
+
+.todo-checkbox.checked {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.todo-checkbox.checked::after {
+    content: '✓';
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.todo-text {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.5;
+    word-break: break-word;
+    cursor: pointer;
+    transition: color 0.2s;
+    user-select: none;
+}
+
+.todo-text.completed {
+    text-decoration: line-through;
+    color: var(--completed-color);
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: var(--delete);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s;
+    line-height: 1;
+}
+
+.todo-item:hover .delete-btn {
+    opacity: 1;
+}
+
+.delete-btn:hover {
+    background: rgba(255, 107, 107, 0.12);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 56px 20px;
+    color: var(--subtext);
+    animation: none;
+}
+
+.empty-state .icon {
+    font-size: 3.5rem;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.empty-state p {
+    font-size: 0.95rem;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--item-hover);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#item-count {
+    font-size: 0.82rem;
+    color: var(--subtext);
+    min-width: 60px;
+}
+
+.filters {
+    display: flex;
+    gap: 4px;
+}
+
+.filter-btn {
+    background: none;
+    border: 1px solid transparent;
+    padding: 5px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--subtext);
+    font-size: 0.82rem;
+    transition: all 0.15s;
+    font-family: inherit;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.filter-btn.active {
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 700;
+    background: rgba(108, 99, 255, 0.08);
+}
+
+#clear-completed {
+    background: none;
+    border: none;
+    color: var(--subtext);
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: color 0.15s;
+    font-family: inherit;
+    padding: 4px 0;
+}
+
+#clear-completed:hover {
+    color: var(--delete);
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 30px 12px 80px;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    .footer {
+        justify-content: center;
+    }
+
+    #item-count {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TODO</h1>
+            <button id="theme-toggle" aria-label="테마 전환">🌙</button>
+        </header>
+
+        <div class="input-area">
+            <input type="text" id="todo-input" placeholder="할 일을 입력하세요..." maxlength="200" autocomplete="off">
+            <button id="add-btn">추가</button>
+        </div>
+
+        <div class="todo-list-container">
+            <ul id="todo-list"></ul>
+            <div class="footer" id="footer">
+                <span id="item-count">0개 남음</span>
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">전체</button>
+                    <button class="filter-btn" data-filter="active">진행중</button>
+                    <button class="filter-btn" data-filter="completed">완료</button>
+                </div>
+                <button id="clear-completed">완료 삭제</button>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
