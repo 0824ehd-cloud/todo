@@ -3,15 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TODO</title>
+    <title>상미 TODO</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>TODO</h1>
-            <button id="theme-toggle" aria-label="테마 전환">🌙</button>
+            <div class="date-display" id="date-display"></div>
+            <div class="header-row">
+                <h1>상미 TODO</h1>
+                <button id="theme-toggle" aria-label="테마 전환">🌙</button>
+            </div>
         </header>
+
+        <div class="day-tabs">
+            <button class="day-tab" data-day="mon"><span class="day-label">월</span></button>
+            <button class="day-tab" data-day="tue"><span class="day-label">화</span></button>
+            <button class="day-tab" data-day="wed"><span class="day-label">수</span></button>
+            <button class="day-tab" data-day="thu"><span class="day-label">목</span></button>
+            <button class="day-tab" data-day="fri"><span class="day-label">금</span></button>
+            <button class="day-tab weekend" data-day="sat"><span class="day-label">토</span></button>
+            <button class="day-tab weekend" data-day="sun"><span class="day-label">일</span></button>
+        </div>
 
         <div class="input-area">
             <input type="text" id="todo-input" placeholder="할 일을 입력하세요..." maxlength="200" autocomplete="off">
@@ -22,11 +35,6 @@
             <ul id="todo-list"></ul>
             <div class="footer" id="footer">
                 <span id="item-count">0개 남음</span>
-                <div class="filters">
-                    <button class="filter-btn active" data-filter="all">전체</button>
-                    <button class="filter-btn" data-filter="active">진행중</button>
-                    <button class="filter-btn" data-filter="completed">완료</button>
-                </div>
                 <button id="clear-completed">완료 삭제</button>
             </div>
         </div>

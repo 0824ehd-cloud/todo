@@ -2,15 +2,41 @@ const input = document.getElementById('todo-input');
 const addBtn = document.getElementById('add-btn');
 const todoList = document.getElementById('todo-list');
 const itemCount = document.getElementById('item-count');
-const filterBtns = document.querySelectorAll('.filter-btn');
 const clearBtn = document.getElementById('clear-completed');
 const themeToggle = document.getElementById('theme-toggle');
+const dateDisplay = document.getElementById('date-display');
+const dayTabs = document.querySelectorAll('.day-tab');
 
-let todos = JSON.parse(localStorage.getItem('todos') || '[]');
-let currentFilter = 'all';
+const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+const DAY_JS_MAP = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+const todayKey = DAY_JS_MAP[new Date().getDay()];
+
+let todos = JSON.parse(localStorage.getItem('todos-weekly') || '{}');
+DAYS.forEach(d => { if (!todos[d]) todos[d] = []; });
+
+let currentDay = todayKey;
+
+function formatDate() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = now.getMonth() + 1;
+    const d = now.getDate();
+    const dayNames = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+    return `${y}년 ${m}월 ${d}일 ${dayNames[now.getDay()]}`;
+}
+
+dateDisplay.textContent = formatDate();
+
+function updateTabs() {
+    dayTabs.forEach(tab => {
+        const day = tab.dataset.day;
+        tab.classList.toggle('active', day === currentDay);
+        tab.classList.toggle('today', day === todayKey);
+    });
+}
 
 function save() {
-    localStorage.setItem('todos', JSON.stringify(todos));
+    localStorage.setItem('todos-weekly', JSON.stringify(todos));
 }
 
 function escapeHtml(text) {
@@ -19,29 +45,21 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function getFiltered() {
-    if (currentFilter === 'active') return todos.filter(t => !t.completed);
-    if (currentFilter === 'completed') return todos.filter(t => t.completed);
-    return todos;
-}
-
 function render() {
-    const filtered = getFiltered();
-    const activeCount = todos.filter(t => !t.completed).length;
-
+    const list = todos[currentDay] || [];
+    const activeCount = list.filter(t => !t.completed).length;
     itemCount.textContent = `${activeCount}개 남음`;
 
-    if (filtered.length === 0) {
-        const isCompleted = currentFilter === 'completed';
+    if (list.length === 0) {
         todoList.innerHTML = `
             <li class="empty-state">
-                <span class="icon">${isCompleted ? '✅' : '📝'}</span>
-                <p>${isCompleted ? '완료된 항목이 없어요' : '할 일을 추가해보세요!'}</p>
+                <span class="icon">📝</span>
+                <p>할 일을 추가해보세요!</p>
             </li>`;
         return;
     }
 
-    todoList.innerHTML = filtered.map(todo => `
+    todoList.innerHTML = list.map(todo => `
         <li class="todo-item" data-id="${todo.id}">
             <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" data-action="toggle"></div>
             <span class="todo-text ${todo.completed ? 'completed' : ''}" data-action="toggle">${escapeHtml(todo.text)}</span>
@@ -51,11 +69,8 @@ function render() {
 
 function addTodo() {
     const text = input.value.trim();
-    if (!text) {
-        input.focus();
-        return;
-    }
-    todos.unshift({ id: Date.now(), text, completed: false });
+    if (!text) { input.focus(); return; }
+    todos[currentDay].unshift({ id: Date.now(), text, completed: false });
     input.value = '';
     save();
     render();
@@ -63,16 +78,12 @@ function addTodo() {
 }
 
 function toggleTodo(id) {
-    const todo = todos.find(t => t.id === id);
-    if (todo) {
-        todo.completed = !todo.completed;
-        save();
-        render();
-    }
+    const todo = todos[currentDay].find(t => t.id === id);
+    if (todo) { todo.completed = !todo.completed; save(); render(); }
 }
 
 function deleteTodo(id) {
-    todos = todos.filter(t => t.id !== id);
+    todos[currentDay] = todos[currentDay].filter(t => t.id !== id);
     save();
     render();
 }
@@ -92,17 +103,17 @@ input.addEventListener('keydown', e => {
     if (e.key === 'Enter') addTodo();
 });
 
-filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFilter = btn.dataset.filter;
+dayTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        currentDay = tab.dataset.day;
+        updateTabs();
         render();
+        input.focus();
     });
 });
 
 clearBtn.addEventListener('click', () => {
-    todos = todos.filter(t => !t.completed);
+    todos[currentDay] = todos[currentDay].filter(t => !t.completed);
     save();
     render();
 });
@@ -118,4 +129,5 @@ themeToggle.addEventListener('click', () => {
     themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
 });
 
+updateTabs();
 render();
